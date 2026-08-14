@@ -106,6 +106,17 @@ No dependencies, no Xcode project, no package manager.
 It builds on your machine on purpose: locally built apps are never quarantined,
 so there is no Gatekeeper warning and no paid Apple Developer account involved.
 
+**It adds itself to your Login Items on first launch.** That is deliberate and
+worth stating plainly rather than leaving you to find it: the baseline is built
+from ten minutes of rolling history, so an app you have to remember to start
+has no answer at the moment you want one. macOS owns the off switch, in System
+Settings → General → Login Items, and turning it off there is respected.
+
+To remove it completely: Quit from the menu, which resumes anything it had
+paused, then `rm -rf /Applications/CoreBeat.app`. Nothing else is written to
+disk except a list of paused process IDs in `UserDefaults`, which is cleared on
+a clean quit.
+
 ## What you can do about it
 
 Four interventions, gentlest first. All of them are one click from the menu bar.

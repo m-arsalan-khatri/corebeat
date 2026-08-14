@@ -24,7 +24,7 @@ die() { printf '\033[1;31mError:\033[0m %s\n' "$1" >&2; exit 1; }
 
 if ! /usr/bin/xcrun --find swiftc > /dev/null 2>&1; then
 	say "The Xcode Command Line Tools are required but not installed."
-	say "Starting the installer — rerun this command once it finishes."
+	say "Starting the installer. Rerun this command once it finishes."
 	xcode-select --install > /dev/null 2>&1 || true
 	exit 1
 fi
@@ -65,7 +65,7 @@ say "Compiling…"
 # this script fails, and "it didn't work" with no output is useless.
 if ! (cd "$SOURCE" && ./build.sh) > "$TMP/build.log" 2>&1; then
 	cat "$TMP/build.log" >&2
-	die "Build failed — the output above should say why."
+	die "Build failed. The output above should say why."
 fi
 
 # Nothing below this point is reversible, so confirm the build actually produced
@@ -73,24 +73,23 @@ fi
 [ -d "$SOURCE/build/${APP_NAME}.app" ] || die "Build finished but produced no app bundle."
 
 # Replacing a running app leaves a zombie in the menu bar, so quit it first.
-# "ChipCrawl" is this app's former name — cleared out too, so upgraders do not
-# end up with two identical-looking sparklines up there. Patterns are full
-# bundle paths rather than bare binary names: pkill -f matches whole command
-# lines, and a bare name would also match, say, an editor with the file open.
-for APP in "${APP_NAME}.app/Contents/MacOS/${APP_NAME}" \
-	"ChipCrawl.app/Contents/MacOS/ChipCrawl"; do
-	if pgrep -f "$APP" > /dev/null 2>&1; then
-		pkill -f "$APP" || true
-		sleep 1
-	fi
-done
-
-# The old name is removed rather than left running: a paused process is resumed
-# by the app's own SIGTERM handler above, so this is safe by the time we get
-# here, and leaving it installed means two menu bar items doing the same job.
-for DIR in "${DEST:?}" "${HOME:?}/Applications"; do
-	rm -rf "${DIR:?}/ChipCrawl.app"
-done
+# Quitting is enough on its own: the app resumes everything it had paused from
+# its SIGTERM handler before it goes.
+#
+# The pattern is a full bundle path rather than a bare binary name, because
+# pkill -f matches whole command lines and "CoreBeat" alone would also match,
+# say, an editor with one of these files open.
+#
+# This installer deliberately touches nothing but its own bundle. An earlier
+# draft also removed "ChipCrawl.app", the name this app carried before release,
+# but that name was never published to anyone: deleting a stranger's
+# identically named app to tidy up a rename only I ever saw is not a trade an
+# installer gets to make.
+APP_PROC="${APP_NAME}.app/Contents/MacOS/${APP_NAME}"
+if pgrep -f "$APP_PROC" > /dev/null 2>&1; then
+	pkill -f "$APP_PROC" || true
+	sleep 1
+fi
 
 say "Installing…"
 rm -rf "${DEST:?}/${APP_NAME}.app"

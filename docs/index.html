@@ -727,7 +727,8 @@ footer a:hover { color: var(--accent); }
       <ol class="steps">
         <li><span><b>Requires macOS 13+</b> and the Xcode Command Line Tools, via <code>xcode-select --install</code>. Nothing else.</span></li>
         <li><span><b>No Xcode project, no package manager, no dependencies.</b> Six Swift files, built in Swift 6 language mode with warnings as errors.</span></li>
-        <li><span><b>Uninstall</b> is Quit from the menu, then <code>rm -rf /Applications/CoreBeat.app</code>. Quitting resumes anything it had paused.</span></li>
+        <li><span><b>It adds itself to Login Items</b> on first launch, because a baseline built from ten minutes of history is no use if you have to remember to start it. macOS owns the off switch, in System Settings → General → Login Items.</span></li>
+        <li><span><b>Uninstall</b> is Quit from the menu, then <code>rm -rf /Applications/CoreBeat.app</code>. Quitting resumes anything it had paused, and nothing else is written to disk.</span></li>
       </ol>
     </div>
 
