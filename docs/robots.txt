@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://m-arsalan-khatri.github.io/corebeat/sitemap.xml

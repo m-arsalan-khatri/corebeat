@@ -20,13 +20,14 @@ below. What is left is genuinely small.
 
 **Loose ends**
 
-- `README.md`'s install line still reads `git clone <this repo>`. The repository
-  exists now but has no remote, so there is still no URL to put there.
+- **Nothing is pushed yet.** The README, `install.sh`, the landing page and the
+  carousel all point at `github.com/m-arsalan-khatri/corebeat` and
+  `m-arsalan-khatri.github.io/corebeat`. Neither exists until the repo is
+  created and Pages is switched on for `/docs` on `main`. Every one of those
+  URLs is dead until then.
 - No `.icns`. Harmless while `LSUIElement` keeps it out of the Dock, but Finder
-  and the About panel show a generic icon.
-- The old `ChipCrawl.app` may still be sitting in `/Applications`. `install.sh`
-  quits it and points at it, but does not delete it — that is Arsalan's call,
-  not a script's.
+  and the About panel show a generic icon. The site and the carousel now have a
+  mark to derive one from — the pulse trace in `docs/favicon.svg`.
 - The migration read of the `com.arsalaniqbal.chipcrawl` defaults domain in
   `Interventions.recoverFromPreviousRun` is one-shot cleanup. It can go once
   nobody is running a build from before the rename.
@@ -69,7 +70,35 @@ Sources/StatusBar.swift      the icon and the menu
 Sources/main.swift           AppKit wiring and the two timers
 tools/verify/                headless behaviour tests
 tools/menudump/              prints the live menu to stdout
+docs/                        the landing page, served by GitHub Pages
 ```
+
+## The landing page and the carousel
+
+`docs/` is the site at `m-arsalan-khatri.github.io/corebeat`. Same rules as the
+app: one self-contained HTML file, zero dependencies, and a CSP that forbids
+loading anything from another origin — so it can never quietly grow an analytics
+script. It styles both colour schemes, and the viewer's explicit choice beats the
+media query in both directions.
+
+The menu in the hero is a live replica driven by the *same* level rule the app
+uses (median of the last 8 samples, 50/80 thresholds), and its remainder row is
+computed rather than typed, so the demo cannot drift out of reconciliation the
+way a hand-written mock would. It only ticks while the tab is visible.
+
+`og.png` is generated, never edited:
+
+```bash
+cd docs && "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" \
+  --headless=new --disable-gpu --hide-scrollbars --force-device-scale-factor=1 \
+  --window-size=1200,630 --screenshot=og.png og.source.html
+```
+
+The LinkedIn carousel lives outside the repo at `~/Desktop/corebeat-carousel/`
+— `carousel.html` is the source, the PDF and the eleven 2160×2160 PNGs are
+generated from it, and `post-caption.md` holds the caption plus both sets of
+regeneration commands. It is deliberately not checked in: it is marketing copy
+with a shelf life, not part of the app.
 
 No Xcode project, no package manager, no dependencies. Command Line Tools only
 (version 16+, since the app builds in Swift 6 language mode).

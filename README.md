@@ -90,7 +90,14 @@ is a symptom of how you are using the machine.
 ## Install
 
 ```bash
-git clone <this repo> && cd CoreBeat && ./install.sh
+curl -fsSL https://raw.githubusercontent.com/m-arsalan-khatri/corebeat/main/install.sh | bash
+```
+
+Or clone it and run the same script — from a checkout it builds the working copy
+in front of it rather than fetching `main`:
+
+```bash
+git clone https://github.com/m-arsalan-khatri/corebeat.git && cd corebeat && ./install.sh
 ```
 
 Needs the Xcode Command Line Tools (`xcode-select --install`) and macOS 13+.
