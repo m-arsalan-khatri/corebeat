@@ -90,11 +90,14 @@ is a symptom of how you are using the machine.
 ## Install
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/m-arsalan-khatri/corebeat/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/m-arsalan-khatri/corebeat/v1.0.0/install.sh | bash
 ```
 
+That URL is pinned to a release tag, not to a branch, and so is the source it
+builds. See [what you are trusting](#what-you-are-trusting) below.
+
 Or clone it and run the same script. From a checkout it builds the working copy
-in front of it rather than fetching `main`:
+in front of it rather than downloading anything:
 
 ```bash
 git clone https://github.com/m-arsalan-khatri/corebeat.git && cd corebeat && ./install.sh
@@ -116,6 +119,37 @@ To remove it completely: Quit from the menu, which resumes anything it had
 paused, then `rm -rf /Applications/CoreBeat.app`. Nothing else is written to
 disk except a list of paused process IDs in `UserDefaults`, which is cleared on
 a clean quit.
+
+## What you are trusting
+
+Piping a URL into `bash` hands that URL a shell as you. Worth being precise
+about what this one can and cannot do.
+
+**Both halves are pinned to a tag.** The one-liner fetches `install.sh` from
+`v1.0.0`, and that script builds the source tarball from the same tag. Nothing
+in the install path reads a branch. If either did, then anyone who gained push
+access, for however few minutes, would run code on every machine that installed
+during that window, and nobody would notice because the command would look
+identical.
+
+**The tags cannot be moved.** A pinned URL is only worth anything if the thing
+it points at is immutable, and a tag can normally be force-pushed by whoever
+holds the account. A repository ruleset here blocks updating and deleting tags,
+so `v1.0.0` keeps returning the same bytes.
+
+**No checksum is pinned, on purpose.** GitHub builds those tarballs on demand
+and has changed their byte output before, which silently broke every hardcoded
+hash relying on them. The protected tag is the integrity guarantee.
+
+**What this does not protect against:** a new release. If the account were
+compromised, an attacker could publish `v1.0.1` and update the README. Pinning
+buys you a reviewable, immutable artefact and stops silent retroactive
+tampering. It does not make future versions trustworthy by itself.
+
+You can always skip the pipe entirely: read
+[`install.sh`](https://github.com/m-arsalan-khatri/corebeat/blob/main/install.sh),
+clone the repo, and run `./install.sh` from the checkout, which builds the code
+in front of you and downloads nothing.
 
 ## What you can do about it
 

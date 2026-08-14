@@ -1,7 +1,7 @@
 #!/bin/bash
 # CoreBeat installer.
 #
-#   curl -fsSL https://raw.githubusercontent.com/m-arsalan-khatri/corebeat/main/install.sh | bash
+#   curl -fsSL https://raw.githubusercontent.com/m-arsalan-khatri/corebeat/v1.0.0/install.sh | bash
 #
 # Builds the app locally with the Xcode Command Line Tools and installs it.
 # Building on your own machine is deliberate: locally compiled apps are never
@@ -16,6 +16,24 @@ set -euo pipefail
 
 REPO="m-arsalan-khatri/corebeat"
 APP_NAME="CoreBeat"
+
+# Pinned to an immutable release tag, never to a branch.
+#
+# The published one-liner fetches *this script* from the same tag, so the
+# installer and the source it builds come from one reviewed point in history.
+# If either pointed at main, then anyone who gained push access, for however
+# few minutes, would run code as you on every machine that installed in that
+# window: `curl | bash` gives them a shell, and a locally built app is never
+# quarantined, so Gatekeeper never gets a look either.
+#
+# A tag can still be force-moved by whoever holds the account, so the tags in
+# this repo are covered by a ruleset that forbids updating or deleting them.
+# That is what makes a pinned URL keep returning the same bytes.
+#
+# Releasing a new version means: bump this, update the one-liner in README.md
+# and docs/index.html, commit, then tag. There is deliberately no "latest"
+# indirection, because that would hand the decision back to whatever is newest.
+VERSION="v1.0.0"
 
 say() { printf '\033[1m==>\033[0m %s\n' "$1"; }
 die() { printf '\033[1;31mError:\033[0m %s\n' "$1" >&2; exit 1; }
@@ -54,9 +72,15 @@ if [ -n "$SELF" ] && [ -x "$SELF/build.sh" ] && [ -f "$SELF/Sources/main.swift" 
 	say "Building the checkout in ${SELF}…"
 	SOURCE="$SELF"
 else
-	say "Fetching the source…"
-	curl -fsSL "https://github.com/${REPO}/archive/refs/heads/main.tar.gz" \
-		| tar xz -C "$TMP" --strip-components=1
+	say "Fetching ${VERSION}…"
+	# refs/tags, not refs/heads. Deliberately no checksum pinned alongside it:
+	# GitHub generates these tarballs on demand and has changed their byte
+	# output before, which silently broke every hardcoded hash in the wild. The
+	# integrity guarantee here is the protected tag, not a digest.
+	if ! curl -fsSL "https://github.com/${REPO}/archive/refs/tags/${VERSION}.tar.gz" \
+		| tar xz -C "$TMP" --strip-components=1; then
+		die "Could not download ${VERSION}. See https://github.com/${REPO}/releases"
+	fi
 	SOURCE="$TMP"
 fi
 
