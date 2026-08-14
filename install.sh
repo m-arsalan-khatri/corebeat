@@ -48,7 +48,10 @@ trap 'rm -rf "$TMP"' EXIT
 # some other build.sh would execute that instead.
 SELF="$(cd "$(dirname "${BASH_SOURCE[0]:-$0}")" 2> /dev/null && pwd || true)"
 if [ -n "$SELF" ] && [ -x "$SELF/build.sh" ] && [ -f "$SELF/Sources/main.swift" ]; then
-	say "Building the checkout in $SELF…"
+	# Braced deliberately: bash 3.2 (what macOS ships) reads the UTF-8 bytes of
+	# the ellipsis as part of the identifier, so "$SELF…" looks up a variable
+	# that does not exist and set -u aborts the install.
+	say "Building the checkout in ${SELF}…"
 	SOURCE="$SELF"
 else
 	say "Fetching the source…"

@@ -1,4 +1,5 @@
 import AppKit
+import ServiceManagement
 
 // Two cadences, because the two data sources cost wildly different amounts.
 // The menu bar number comes from host_statistics, which is a syscall costing
@@ -29,6 +30,7 @@ final class CoreBeat: NSObject, NSApplicationDelegate, NSMenuDelegate {
 
     func applicationDidFinishLaunching(_ notification: Notification) {
         _ = Interventions.shared // recovers anything a previous run left paused
+        Self.openAtLogin()
 
         statusItem.button?.imagePosition = .imageLeading
         let menu = NSMenu()
@@ -49,6 +51,25 @@ final class CoreBeat: NSObject, NSApplicationDelegate, NSMenuDelegate {
 
     func applicationWillTerminate(_ notification: Notification) {
         Interventions.shared.resumeEverything()
+    }
+
+    /// Registers the app to start at login, every launch.
+    ///
+    /// There is deliberately no menu item for this. A monitor that only watches
+    /// while you remember to open it cannot know what "normal" looks like — the
+    /// baseline is built from ten minutes of history, so an app that starts
+    /// with the session is the only one that has an answer when you finally ask.
+    ///
+    /// Not a silent capture of the login list: macOS shows the registration in
+    /// System Settings → General → Login Items and lets it be switched off
+    /// there, which is the switch a second checkbox in here would only shadow.
+    private static func openAtLogin() {
+        guard SMAppService.mainApp.status != .enabled else { return }
+        // Throws for a bundle macOS does not consider installed — running
+        // straight out of ./build, which is every development run. Silent is
+        // right: there is nothing the user could usefully do about it, and an
+        // installed copy registers on its first launch anyway.
+        try? SMAppService.mainApp.register()
     }
 
     // MARK: - Sampling

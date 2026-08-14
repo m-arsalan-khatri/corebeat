@@ -1,7 +1,8 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
   <!-- The pulse trace — the app's own status item, which is the only thing it
-       ever puts on screen when nothing is wrong. -->
+       ever puts on screen when nothing is wrong. Phosphor green, so the tab
+       icon reads the same as the trace on the page. -->
   <path d="M2 15.4 5.4 12.9 7.8 16.6 10.9 6.2 14 18.2 16.4 11.4 18.8 13.9 22 9.6"
-        fill="none" stroke="#34d399" stroke-width="2.1"
+        fill="none" stroke="#00ff5f" stroke-width="2.1"
         stroke-linecap="round" stroke-linejoin="round"/>
 </svg>

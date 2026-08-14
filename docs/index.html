@@ -6,29 +6,31 @@
 
 <!-- The page is entirely self-contained, so it can lock itself down: nothing
      loads from another origin, nothing phones home, and there is no form or
-     base-tag redirect to hijack. frame-ancestors is deliberately absent — it is
+     base-tag redirect to hijack. frame-ancestors is deliberately absent, because it is
      ignored in a meta tag, and GitHub Pages can't set real headers. -->
 <meta http-equiv="Content-Security-Policy"
       content="default-src 'none'; img-src 'self' data:; style-src 'unsafe-inline'; script-src 'unsafe-inline'; connect-src 'none'; base-uri 'none'; form-action 'none'">
 
-<title>CoreBeat — find out which app actually changed</title>
-<meta name="description" content="A menu-bar-only macOS app that watches each app against its own normal CPU usage and names the one that departed from it — then lets you pause, throttle or quit it in the same click. Free, open source, one line to install.">
+<title>CoreBeat: find out which app actually changed</title>
+<meta name="description" content="A menu-bar-only macOS app that watches each app against its own normal CPU usage and names the one that departed from it, then lets you pause, throttle or quit it in the same click. Free, open source, one line to install.">
 <link rel="canonical" href="https://m-arsalan-khatri.github.io/corebeat/">
-<meta name="theme-color" content="#07090d" media="(prefers-color-scheme: dark)">
-<meta name="theme-color" content="#f7f9fb" media="(prefers-color-scheme: light)">
-<meta name="color-scheme" content="dark light">
+<meta name="theme-color" content="#040705">
+<!-- Dark only, and declared as such. The page is styled as an instrument
+     readout; a light variant would be a different product's identity, and
+     half-supporting one is worse than not offering it. -->
+<meta name="color-scheme" content="dark">
 
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="CoreBeat">
-<meta property="og:title" content="CoreBeat — not what's using the most. What changed.">
+<meta property="og:title" content="CoreBeat: not what's using the most. What changed.">
 <meta property="og:description" content="Every CPU monitor shows the same four apps at the top whether your Mac is fine or dying. CoreBeat watches each app against its own normal and names the one that moved.">
 <meta property="og:url" content="https://m-arsalan-khatri.github.io/corebeat/">
 <meta property="og:image" content="https://m-arsalan-khatri.github.io/corebeat/og.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="CoreBeat — not what's using the most. What changed.">
+<meta property="og:image:alt" content="CoreBeat: not what's using the most. What changed.">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="CoreBeat — not what's using the most. What changed.">
+<meta name="twitter:title" content="CoreBeat: not what's using the most. What changed.">
 <meta name="twitter:description" content="Every CPU monitor shows the same four apps at the top whether your Mac is fine or dying. CoreBeat names the one that moved.">
 <meta name="twitter:image" content="https://m-arsalan-khatri.github.io/corebeat/og.png">
 
@@ -53,17 +55,21 @@
 <style>
 /* ── Tokens ──────────────────────────────────────────────────────────── */
 :root {
-  --bg:        #07090d;
-  --bg-lift:   #0d1117;
-  --surface:   #131922;
-  --line:      #212a36;
-  --line-soft: #19202a;
-  --text:      #eaf0f7;
-  --muted:     #94a3b6;
-  --faint:     #64748b;
-  --accent:    #34d399;
-  --accent-dim:#0f9c72;
-  --pulse:     #6ee7b7;
+  /* Near-black with a green cast rather than a blue one, so the phosphor
+     accent sits in the same family as the surface it burns on. */
+  --bg:        #040705;
+  --bg-lift:   #0a1109;
+  --surface:   #0d160c;
+  --line:      #1d2e1c;
+  --line-soft: #162315;
+  --text:      #e6f5e9;
+  --muted:     #8fa894;
+  --faint:     #5e7563;
+  /* Phosphor green. Full saturation on the natural-green hue, which is what
+     makes it read as a CRT trace rather than as a brand mint. */
+  --accent:    #00ff5f;
+  --accent-dim:#00a83e;
+  --pulse:     #8bffb4;
   /* The app's own two warning colours. They mean the same thing here as they
      do in the menu bar, so they are tokens rather than one-off hex. */
   --amber:     #e8a33d;
@@ -71,35 +77,12 @@
   --shadow:    0 24px 60px -20px rgba(0,0,0,.8);
   --radius:    14px;
   --maxw:      1080px;
-}
-@media (prefers-color-scheme: light) {
-  :root {
-    --bg:        #f7f9fb;
-    --bg-lift:   #ffffff;
-    --surface:   #ffffff;
-    --line:      #dde5ee;
-    --line-soft: #e9eef4;
-    --text:      #0b1220;
-    --muted:     #4a5769;
-    --faint:     #6b7a8c;
-    --accent:    #0a7f5c;
-    --accent-dim:#0d9668;
-    --pulse:     #076b4d;
-    --amber:     #a2650b;
-    --red:       #c4353b;
-    --shadow:    0 24px 60px -28px rgba(20,35,60,.24);
-  }
-}
-/* The viewer's explicit choice must beat the media query in both directions. */
-:root[data-theme="dark"] {
-  --bg:#07090d; --bg-lift:#0d1117; --surface:#131922; --line:#212a36; --line-soft:#19202a;
-  --text:#eaf0f7; --muted:#94a3b6; --faint:#64748b; --accent:#34d399; --accent-dim:#0f9c72;
-  --pulse:#6ee7b7; --amber:#e8a33d; --red:#f2555a; --shadow:0 24px 60px -20px rgba(0,0,0,.8);
-}
-:root[data-theme="light"] {
-  --bg:#f7f9fb; --bg-lift:#ffffff; --surface:#ffffff; --line:#dde5ee; --line-soft:#e9eef4;
-  --text:#0b1220; --muted:#4a5769; --faint:#6b7a8c; --accent:#0a7f5c; --accent-dim:#0d9668;
-  --pulse:#076b4d; --amber:#a2650b; --red:#c4353b; --shadow:0 24px 60px -28px rgba(20,35,60,.24);
+  /* Instrument furniture: the graticule behind everything, and the phosphor
+     bloom on anything that represents a live reading. */
+  --grid:      rgba(0,255,95,.055);
+  --grid-step: 34px;
+  --glow:      drop-shadow(0 0 7px color-mix(in srgb, currentColor 55%, transparent));
+  --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace;
 }
 
 /* ── Reset ───────────────────────────────────────────────────────────── */
@@ -119,6 +102,25 @@ body {
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
 }
+/* The graticule every vitals monitor is ruled with. Fixed rather than scrolling
+   so the page reads as content moving behind a screen, and kept far below the
+   threshold where it competes with text. It should register as texture, not
+   as a grid you could count. */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    repeating-linear-gradient(to right, var(--grid) 0 1px, transparent 1px var(--grid-step)),
+    repeating-linear-gradient(to bottom, var(--grid) 0 1px, transparent 1px var(--grid-step));
+  /* Faded at the edges so it never forms a hard rectangle against the viewport. */
+  mask-image: radial-gradient(120% 80% at 50% 30%, #000 30%, transparent 100%);
+  -webkit-mask-image: radial-gradient(120% 80% at 50% 30%, #000 30%, transparent 100%);
+}
+/* Everything real sits above the graticule. */
+header, main, footer { position: relative; z-index: 1; }
 img, svg { max-width: 100%; }
 a { color: var(--accent); text-decoration-thickness: 1px; text-underline-offset: 3px; }
 a:hover { color: var(--pulse); }
@@ -134,9 +136,17 @@ code, kbd, pre { font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, mo
 /* ── Layout ──────────────────────────────────────────────────────────── */
 .wrap { width: 100%; max-width: var(--maxw); margin-inline: auto; padding-inline: 24px; }
 section { padding-block: clamp(64px, 9vw, 112px); }
+/* Set in the readout face, and led by a channel marker: the label on an
+   instrument, not a marketing kicker. */
 .eyebrow {
-  font-size: 12px; font-weight: 650; letter-spacing: .14em; text-transform: uppercase;
+  font-family: var(--mono);
+  font-size: 12px; font-weight: 500; letter-spacing: .18em; text-transform: uppercase;
   color: var(--accent); margin: 0 0 18px;
+  display: flex; align-items: center; gap: 10px;
+}
+.eyebrow::before {
+  content: ""; width: 22px; height: 2px; flex: none;
+  background: currentColor; filter: var(--glow);
 }
 h1, h2, h3 { line-height: 1.1; letter-spacing: -.025em; margin: 0; font-weight: 660; }
 h2 { font-size: clamp(30px, 4.4vw, 42px); }
@@ -155,7 +165,7 @@ header {
 header.scrolled { border-bottom-color: var(--line-soft); }
 .nav { display: flex; align-items: center; gap: 20px; height: 62px; }
 .brand { display: flex; align-items: center; gap: 9px; font-weight: 650; letter-spacing: -.015em; color: var(--text); text-decoration: none; margin-right: auto; }
-.brand svg { width: 22px; height: 22px; color: var(--accent); }
+.brand svg { width: 22px; height: 22px; color: var(--accent); filter: var(--glow); }
 .nav a.navlink { color: var(--muted); text-decoration: none; font-size: 15px; }
 .nav a.navlink:hover { color: var(--text); }
 @media (max-width: 700px) { .nav a.navlink[data-optional] { display: none; } }
@@ -174,19 +184,37 @@ header.scrolled { border-bottom-color: var(--line-soft); }
 .hero { position: relative; padding-block: clamp(52px, 8vw, 92px) clamp(56px, 8vw, 96px); overflow: hidden; }
 .hero::before {
   content: ""; position: absolute; inset: -40% 0 auto 0; height: 620px; pointer-events: none;
-  background: radial-gradient(58% 62% at 50% 42%, color-mix(in srgb, var(--accent) 20%, transparent) 0%, transparent 72%);
-  opacity: .5;
+  background: radial-gradient(58% 62% at 50% 42%, color-mix(in srgb, var(--accent) 18%, transparent) 0%, transparent 72%);
+  opacity: .42;
 }
-@media (prefers-color-scheme: light) { .hero::before { opacity: .28; } }
 .hero > * { position: relative; }
+
+/* The vitals trace, running behind the hero.
+   Two cycles' worth of path is drawn and the whole thing is translated by
+   exactly half its width, so the loop is seamless rather than snapping back.
+   Kept at low opacity: it is wallpaper, and the trace that carries actual
+   meaning is the tiny one in the menu bar mock. */
+.hero > .ecg {
+  position: absolute;
+  left: 0; bottom: 0;
+  width: 200%; height: clamp(120px, 17vw, 180px);
+  pointer-events: none;
+  color: var(--accent);
+  opacity: .13;
+  filter: var(--glow);
+  animation: sweep 16s linear infinite;
+}
+.ecg path { fill: none; stroke: currentColor; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+@keyframes sweep { to { transform: translateX(-50%); } }
+@media (prefers-reduced-motion: reduce) { .hero > .ecg { animation: none; } }
 .hero-grid { display: grid; gap: clamp(40px, 6vw, 64px); align-items: center; grid-template-columns: 1fr; }
 @media (min-width: 900px) { .hero-grid { grid-template-columns: 1.05fr 360px; } }
 /* Grid children default to min-width:auto, and these columns hold nowrap shell
-   commands — without this the long ones blow the track out and crush the rest. */
+   commands, and without this the long ones blow the track out and crush the rest. */
 .hero-grid > *, .split > * { min-width: 0; }
 
 h1 { font-size: clamp(40px, 7vw, 72px); letter-spacing: -.038em; font-weight: 680; }
-h1 .hl { color: var(--accent); }
+h1 .hl { color: var(--accent); text-shadow: 0 0 32px color-mix(in srgb, var(--accent) 40%, transparent); }
 .hero p.lede { margin: 22px 0 0; }
 .hero-actions { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; margin-top: 30px; }
 .meta-row { display: flex; flex-wrap: wrap; gap: 8px 18px; margin-top: 26px; color: var(--faint); font-size: 14px; }
@@ -203,7 +231,7 @@ h1 .hl { color: var(--accent); }
   flex: 1; min-width: 0; padding: 14px 16px; overflow-x: auto; white-space: nowrap;
   color: var(--text); scrollbar-width: thin;
 }
-/* Long commands wrap instead of scrolling out of sight — when you're asking
+/* Long commands wrap instead of scrolling out of sight, because when you're asking
    someone to pipe a URL into bash, the whole URL should be readable. */
 .cmd--wrap code { white-space: pre-wrap; overflow-wrap: anywhere; overflow-x: visible; }
 .cmd code .prompt { color: var(--accent); user-select: none; }
@@ -228,9 +256,11 @@ h1 .hl { color: var(--accent); }
   border: 1px solid var(--line); border-bottom: 0;
   border-radius: 10px 10px 0 0; color: var(--muted); font-size: 12px;
 }
-/* The status item itself. Sized like the real one — 32×14pt — but scaled up so
+/* The status item itself. Sized like the real one at 32×14pt, but scaled up so
    the shape is legible on a web page rather than out of the corner of an eye. */
-.spark { width: 58px; height: 25px; display: block; flex: none; }
+/* Phosphor bloom on the trace, and only on the trace, because it is the one element
+   on the page standing in for a live reading. */
+.spark { width: 58px; height: 25px; display: block; flex: none; filter: var(--glow); }
 .spark .area { fill: currentColor; opacity: .26; }
 .spark .line { fill: none; stroke: currentColor; stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; }
 .lvl-steady   { color: var(--muted); }
@@ -325,13 +355,13 @@ td b { color: var(--text); font-weight: 640; }
 td:last-child { color: var(--muted); }
 .yes { color: var(--accent); font-weight: 600; }
 .no { color: var(--faint); }
-/* One word, and it must never be the column that wraps — the prose beside it
+/* One word, and it must never be the column that wraps. The prose beside it
    has far more to give. */
 td.undo, th.undo { white-space: nowrap; width: 1%; }
 
 /* ── Steps ───────────────────────────────────────────────────────────── */
 .steps { display: grid; gap: 14px; margin: 32px 0 0; padding: 0; list-style: none; counter-reset: s; }
-/* The counter bubble and the text are the only two flex items — the text has to
+/* The counter bubble and the text are the only two flex items, so the text has to
    stay wrapped in a span, or every text node becomes its own column. */
 .steps li {
   display: flex; gap: 14px; align-items: flex-start; color: var(--muted); font-size: 15.5px;
@@ -397,6 +427,17 @@ footer a:hover { color: var(--accent); }
 
 <!-- ── Hero ──────────────────────────────────────────────────────────── -->
 <section class="hero" id="top">
+  <svg class="ecg" viewBox="0 0 2400 120" preserveAspectRatio="none" aria-hidden="true">
+    <path d="M0 90
+             h56 l10 -8 l10 8 h20 l6 12 l8 -70 l8 66 l6 -8 h24 l16 -12 l16 12 h120
+             h56 l10 -8 l10 8 h20 l6 12 l8 -70 l8 66 l6 -8 h24 l16 -12 l16 12 h120
+             h56 l10 -8 l10 8 h20 l6 12 l8 -70 l8 66 l6 -8 h24 l16 -12 l16 12 h120
+             h56 l10 -8 l10 8 h20 l6 12 l8 -70 l8 66 l6 -8 h24 l16 -12 l16 12 h120
+             h56 l10 -8 l10 8 h20 l6 12 l8 -70 l8 66 l6 -8 h24 l16 -12 l16 12 h120
+             h56 l10 -8 l10 8 h20 l6 12 l8 -70 l8 66 l6 -8 h24 l16 -12 l16 12 h120
+             h56 l10 -8 l10 8 h20 l6 12 l8 -70 l8 66 l6 -8 h24 l16 -12 l16 12 h120
+             h56 l10 -8 l10 8 h20 l6 12 l8 -70 l8 66 l6 -8 h24 l16 -12 l16 12 h120"/>
+  </svg>
   <div class="wrap hero-grid">
     <div>
       <p class="eyebrow">macOS · menu bar only · MIT</p>
@@ -429,7 +470,7 @@ footer a:hover { color: var(--accent); }
 
     <!-- Interactive replica of the real menu. Changing the scenario re-runs the
          same level logic the app uses, so the trace, the colour and the verdict
-         all move together — which is the product in one interaction. -->
+         all move together, which is the product in one interaction. -->
     <div class="mock">
       <div class="menubar">
         <svg class="spark lvl-steady" id="spark" viewBox="0 0 116 50" preserveAspectRatio="none" aria-hidden="true">
@@ -450,7 +491,7 @@ footer a:hover { color: var(--accent); }
         <button type="button" data-s="spike" aria-pressed="false">Chrome wakes</button>
         <button type="button" data-s="broad" aria-pressed="false">All at once</button>
       </div>
-      <p class="mock-cap">The whole interface. <b>Go on — break something.</b></p>
+      <p class="mock-cap">The whole interface. <b>Go on, break something.</b></p>
     </div>
   </div>
 </section>
@@ -461,7 +502,7 @@ footer a:hover { color: var(--accent); }
     <p class="eyebrow">The problem</p>
     <h2>The top of the list never changes.</h2>
     <p class="lede" style="margin-top:18px">
-      You open Activity Monitor, sort by CPU, and see Chrome, your editor and WindowServer —
+      You open Activity Monitor, sort by CPU, and see Chrome, your editor and WindowServer.
       exactly what you saw last week when everything was fine. Sorting by size answers a
       question nobody asked. The useful one is <strong>what is different from ten minutes ago</strong>.
     </p>
@@ -475,7 +516,7 @@ footer a:hover { color: var(--accent); }
       <div class="card">
         <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M3 12s3.5-6 9-6 9 6 9 6-3.5 6-9 6-9-6-9-6z"/><path d="m4 20 16-16"/></svg>
         <h3>The culprit is often invisible</h3>
-        <p>The usual APIs refuse processes you don't own — 423 of 600 on the machine this was built on. That hides antivirus, MDM agents and WindowServer.</p>
+        <p>The usual APIs refuse processes you don't own, 423 of 600 on the machine this was built on. That hides antivirus, MDM agents and WindowServer.</p>
       </div>
       <div class="card">
         <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M12 7v5l3 2"/><circle cx="12" cy="12" r="8.5"/></svg>
@@ -498,7 +539,7 @@ footer a:hover { color: var(--accent); }
         if Chrome is always at 30%. Chrome at 30% after ten minutes at 2% is your answer.
       </p>
       <p>
-        A spike has to clear three bars to be worth your attention — it must be above 4% at
+        A spike has to clear three bars to be worth your attention. It must be above 4% at
         all, at least double the baseline, and at least five points above it. Doubling from
         0.3% to 0.9% is technically a departure and entirely uninteresting.
       </p>
@@ -514,7 +555,7 @@ footer a:hover { color: var(--accent); }
     <div>
       <h3 style="margin-bottom:16px">The rows add up to the header</h3>
       <p class="lede" style="font-size:16px;margin-bottom:18px">
-        Named apps always fall short of the total — a long tail of ~380 processes, plus work
+        Named apps always fall short of the total: a long tail of ~380 processes, plus work
         macOS attributes to nothing at all. Measured on a 10-core M4 at 56% load:
       </p>
       <div class="tablewrap">
@@ -529,7 +570,7 @@ footer a:hover { color: var(--accent); }
       </div>
       <p style="color:var(--faint);font-size:14px;margin-top:14px">
         So the last row is <b style="color:var(--muted)">Everything else</b>, carrying the remainder.
-        The build fails if the column stops reconciling with the header — the first thing anyone
+        The build fails if the column stops reconciling with the header, because the first thing anyone
         does with a column of percentages is add it up, and coming up fifteen points short
         discredits the number at the top.
       </p>
@@ -551,7 +592,7 @@ footer a:hover { color: var(--accent); }
     <h2>A shape, not a number.</h2>
     <p class="lede" style="margin-top:18px">
       There is no percentage up there. A number invites you to read it constantly and tells you
-      nothing on its own — 70% is fine during a build and alarming while you're typing into a
+      nothing on its own. 70% is fine during a build and alarming while you're typing into a
       text field. The shape of the last minute says more: a step up that stays up looks nothing
       like a spiky sawtooth, and a bare number shows neither.
     </p>
@@ -585,8 +626,8 @@ footer a:hover { color: var(--accent); }
         <h3>Two rules stop it crying wolf</h3>
         <p style="margin-top:14px">
           <strong>It judges sustained load, not the latest reading.</strong> The level comes from the
-          median of the last ~16 seconds. Single 100% samples happen constantly — every app launch,
-          every page load — and a menu bar that flashes red at each one is one you learn to ignore
+          median of the last ~16 seconds. Single 100% samples happen constantly, on every app launch and
+          every page load, and a menu bar that flashes red at each one is one you learn to ignore
           within a day.
         </p>
         <p>
@@ -599,7 +640,7 @@ footer a:hover { color: var(--accent); }
         <h3>It says when nothing is to blame</h3>
         <p style="margin-top:14px">
           When the machine is genuinely loaded but no app owns more than a third of it, the headline
-          says <strong>spread across many apps</strong> rather than "nothing unusual" — which is
+          says <strong>spread across many apps</strong> rather than "nothing unusual", which is
           technically true and useless to someone whose Mac is dragging.
         </p>
         <p>
@@ -623,20 +664,20 @@ footer a:hover { color: var(--accent); }
         It's only safe to reach for because coming back is <strong>guaranteed</strong>.
       </p>
       <p>
-        A Mac left with a permanently frozen app — by a utility you installed to make things
-        <em>better</em> — is a far worse outcome than the slowdown it was fixing. So four
+        A Mac left with a permanently frozen app, by a utility you installed to make things
+        <em>better</em>, is a far worse outcome than the slowdown it was fixing. So four
         independent mechanisms enforce it:
       </p>
       <ol class="steps">
         <li><span><b>It lapses by itself</b> after 10 minutes, whatever else happens.</span></li>
         <li><span><b>Quitting normally</b> resumes everything it paused.</span></li>
-        <li><span><b>SIGTERM, SIGINT, SIGHUP, SIGQUIT</b> — logout, shutdown, <code>killall</code> — are caught and resume everything first, from an async-signal-safe handler.</span></li>
+        <li><span><b>SIGTERM, SIGINT, SIGHUP, SIGQUIT</b>, meaning logout, shutdown and <code>killall</code>, are caught and resume everything first, from an async-signal-safe handler.</span></li>
         <li><span><b>SIGKILL and panics</b> can't be caught, so the paused set is on disk. The next launch resumes whatever an unclean exit left behind.</span></li>
       </ol>
 
       <div class="guarantee">
         <p><strong>Mechanisms 3 and 4 are tested by actually killing a child process</strong> and
-        checking the victim thawed — not by asserting that a function was called.</p>
+        checking the victim thawed, not by asserting that a function was called.</p>
       </div>
     </div>
 
@@ -649,7 +690,7 @@ footer a:hover { color: var(--accent); }
             <tr><td><b>Pause</b><br><code>SIGSTOP</code></td><td>Stops it using any CPU, keeping every window and all its state.</td><td class="undo yes">Yes</td></tr>
             <tr><td><b>Ease Off</b><br><code>PRIO_DARWIN_BG</code></td><td>Pins it to the efficiency cores, disk I/O throttled.</td><td class="undo yes">Yes</td></tr>
             <tr><td><b>Quit</b><br><code>SIGTERM</code></td><td>Asks it to close normally, so it can save first.</td><td class="undo no">No</td></tr>
-            <tr><td><b>Force Quit</b><br><code>SIGKILL</code></td><td>Kills it. Asks first — unsaved work is lost.</td><td class="undo no">No</td></tr>
+            <tr><td><b>Force Quit</b><br><code>SIGKILL</code></td><td>Kills it. Asks first, because unsaved work is lost.</td><td class="undo no">No</td></tr>
           </tbody>
         </table>
       </div>
@@ -661,8 +702,8 @@ footer a:hover { color: var(--accent); }
         kill <code>mds_stores</code>.
       </p>
       <p style="color:var(--muted);font-size:15.5px;margin:0">
-        Processes macOS needs — the Dock, <code>loginwindow</code>, WindowServer,
-        <code>coreaudiod</code> — are visible but untouchable, however much CPU they're using.
+        Processes macOS needs, like the Dock, <code>loginwindow</code>, WindowServer,
+        <code>coreaudiod</code>, are visible but untouchable, however much CPU they're using.
       </p>
     </div>
   </div>
@@ -680,11 +721,11 @@ footer a:hover { color: var(--accent); }
         Gatekeeper warning to click through and no paid developer account propping it up.
       </p>
       <p>
-        Piping a script to <code>bash</code> deserves a read first —
+        Piping a script to <code>bash</code> deserves a read first,
         <a href="https://github.com/m-arsalan-khatri/corebeat/blob/main/install.sh" rel="noopener">here it is</a>.
       </p>
       <ol class="steps">
-        <li><span><b>Requires macOS 13+</b> and the Xcode Command Line Tools — <code>xcode-select --install</code>. Nothing else.</span></li>
+        <li><span><b>Requires macOS 13+</b> and the Xcode Command Line Tools, via <code>xcode-select --install</code>. Nothing else.</span></li>
         <li><span><b>No Xcode project, no package manager, no dependencies.</b> Six Swift files, built in Swift 6 language mode with warnings as errors.</span></li>
         <li><span><b>Uninstall</b> is Quit from the menu, then <code>rm -rf /Applications/CoreBeat.app</code>. Quitting resumes anything it had paused.</span></li>
       </ol>
@@ -789,7 +830,7 @@ footer a:hover { color: var(--accent); }
 
   /* ── Interactive menu demo ────────────────────────────────────────── */
   // Each scenario is a target load plus the rows that account for it. The
-  // remainder row is computed, never written down — same rule as the app, so
+  // remainder row is computed, never written down, same rule as the app, so
   // the demo cannot drift out of reconciliation the way a hand-typed mock would.
   const SCENARIOS = {
     quiet: {
@@ -921,7 +962,7 @@ footer a:hover { color: var(--accent); }
   }
   function halt() { clearInterval(tick); tick = null; }
 
-  // Only ticks while the tab is visible — the same instinct the app itself has
+  // Only ticks while the tab is visible, the same instinct the app itself has
   // about not burning cycles to redraw something nobody is looking at.
   addEventListener("visibilitychange", () => { document.hidden ? halt() : run(); });
 

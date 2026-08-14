@@ -50,6 +50,17 @@ Answered by Arsalan, recorded here so they are not reopened.
   we are still learning. Changes still win the headline when there are any.
 - **Renamed from ChipCrawl to CoreBeat**, including the bundle id
   (`com.arsalaniqbal.corebeat`).
+- **No "Open at Login" checkbox.** The app calls `openAtLogin()` on every
+  launch and registers itself. A monitor that only watches when you remember to
+  start it cannot know what normal looks like, since the baseline needs ten
+  minutes of history. macOS still owns the off switch in System Settings →
+  General → Login Items, so removing the menu item deleted a duplicate control
+  rather than a capability. Do not add it back.
+- **Bundle id and licence name stay as they are.** `com.arsalaniqbal.*` and
+  the real name on the MIT licence both match what CoffeeShot already publishes
+  under the same GitHub account, so changing them here would un-publish nothing
+  and would cost a third bundle-id migration on an app whose headline invariant
+  is that a paused process always comes back.
 
 ## Commands
 
@@ -72,6 +83,26 @@ tools/verify/                headless behaviour tests
 tools/menudump/              prints the live menu to stdout
 docs/                        the landing page, served by GitHub Pages
 ```
+
+## Brand and copy rules
+
+- **Dark only.** The site declares `color-scheme: dark` and has no light
+  variant. It is styled as an instrument readout: a fixed graticule behind the
+  content, mono channel labels with a leading tick, and a phosphor bloom applied
+  only to things standing in for a live reading.
+- **Phosphor green `#00ff5f`** on a green-cast near-black. Full saturation on
+  the natural-green hue is what makes it read as a CRT trace rather than a brand
+  mint. Amber `#e8a33d` and red `#f2555a` are reserved: they mean `elevated` and
+  `racing`, exactly as they do in the menu bar, so nothing else may use them.
+- **No em dashes in anything a user reads.** README, the landing page, the deck
+  and the LinkedIn caption are all clear of them, on purpose. Use a colon, a
+  comma or a full stop instead. En dashes stay in numeric ranges like 50–80%.
+  Code comments still use them; that is the pre-existing house style and is not
+  worth a sweeping rewrite, but do not add em dashes to user-facing strings.
+- **The deck and the site are one system.** Same palette, same graticule, same
+  channel labels. The deck diverges in one respect only: no filter or
+  text-shadow ever touches type there, because filters rasterise and the point
+  of a PDF deck is that the text stays vector and sharp at any zoom.
 
 ## The landing page and the carousel
 
@@ -254,6 +285,7 @@ and check it agrees with `ps`.
 - `Ease Off` (`PRIO_DARWIN_BG`) is a brake, not a dial. macOS offers no way to
   cap a process at a specific percentage, and `renice` does essentially nothing
   on Apple Silicon.
-- Launch-at-login registration fails when the app runs from `./build`; macOS
-  only accepts it for an installed bundle. The checkbox silently stays off,
-  which is correct behaviour rather than a bug to fix.
+- Launch-at-login registration fails when the app runs from `./build`, because
+  macOS only accepts it for an installed bundle. `openAtLogin()` swallows that,
+  which is correct: every development run hits it, and an installed copy
+  registers on its first launch anyway.

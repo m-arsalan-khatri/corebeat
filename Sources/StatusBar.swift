@@ -1,5 +1,4 @@
 import AppKit
-import ServiceManagement
 
 // The menu bar item carries three things at a glance, in decreasing order of
 // how often they matter: how loaded the machine is, whether that is a spike or
@@ -382,10 +381,10 @@ enum MenuBuilder {
             NSWorkspace.shared.openApplication(at: url, configuration: .init())
         })
 
-        let loginItem = command("Open at Login") { toggleLaunchAtLogin() }
-        loginItem.state = SMAppService.mainApp.status == .enabled ? .on : .off
-        menu.addItem(loginItem)
-
+        // No "Open at Login" checkbox. The app registers itself on launch, and
+        // macOS already owns the off switch for that in System Settings →
+        // General → Login Items. A second control over the same state is the
+        // preferences pane this app does not have, one row at a time.
         menu.addItem(.separator())
         let quit = command("Quit CoreBeat", action: onQuit)
         quit.keyEquivalent = "q"
@@ -640,17 +639,4 @@ enum MenuBuilder {
         return minutes <= 1 ? "under a minute" : "\(minutes) min"
     }
 
-    private static func toggleLaunchAtLogin() {
-        do {
-            if SMAppService.mainApp.status == .enabled {
-                try SMAppService.mainApp.unregister()
-            } else {
-                try SMAppService.mainApp.register()
-            }
-        } catch {
-            // Registration fails for a bundle macOS does not consider
-            // installed — typically running straight out of ./build. Silent is
-            // right: the checkbox simply stays where it was.
-        }
-    }
 }
